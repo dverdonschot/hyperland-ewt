@@ -1,0 +1,162 @@
+#!/usr/bin/env bash
+
+# Hyprland User Configuration Setup Script
+# Initializes Hyprland configuration for new users
+
+set -euo pipefail
+
+USER_CONFIG_DIR="$HOME/.config/hypr"
+SYSTEM_CONFIG_DIR="/etc/hypr"
+
+echo "Setting up Hyprland configuration for user: $USER"
+
+# =============================================================================
+# CONFIGURATION DIRECTORY SETUP
+# =============================================================================
+
+# Create user config directory if it doesn't exist
+mkdir -p "$USER_CONFIG_DIR"
+mkdir -p "$USER_CONFIG_DIR/themes"
+
+# =============================================================================
+# COPY SYSTEM CONFIGURATIONS
+# =============================================================================
+
+copy_config_file() {
+    local filename="$1"
+    local source="$SYSTEM_CONFIG_DIR/$filename"
+    local target="$USER_CONFIG_DIR/$filename"
+    
+    if [[ -f "$source" ]]; then
+        if [[ ! -f "$target" ]] || [[ "$source" -nt "$target" ]]; then
+            echo "Copying $filename..."
+            cp "$source" "$target"
+            chmod 644 "$target"
+        else
+            echo "User $filename is up to date"
+        fi
+    else
+        echo "Warning: System $filename not found at $source"
+    fi
+}
+
+# Copy configuration files
+copy_config_file "hyprland.conf"
+copy_config_file "keybinds.conf"
+copy_config_file "startup.conf"
+copy_config_file "window-rules.conf"
+copy_config_file "monitors.conf"
+
+# Copy themes
+if [[ -d "$SYSTEM_CONFIG_DIR/themes" ]]; then
+    echo "Copying theme configurations..."
+    cp -r "$SYSTEM_CONFIG_DIR/themes/"* "$USER_CONFIG_DIR/themes/" 2>/dev/null || true
+fi
+
+# =============================================================================
+# WAYBAR SETUP
+# =============================================================================
+
+WAYBAR_CONFIG_DIR="$HOME/.config/waybar"
+
+if [[ ! -d "$WAYBAR_CONFIG_DIR" ]]; then
+    echo "Setting up Waybar configuration..."
+    mkdir -p "$WAYBAR_CONFIG_DIR"
+    
+    # Copy from skel if available
+    if [[ -d "/etc/skel/.config/waybar" ]]; then
+        cp -r /etc/skel/.config/waybar/* "$WAYBAR_CONFIG_DIR/"
+    fi
+fi
+
+# =============================================================================
+# ROFI SETUP
+# =============================================================================
+
+ROFI_CONFIG_DIR="$HOME/.config/rofi"
+
+if [[ ! -d "$ROFI_CONFIG_DIR" ]]; then
+    echo "Setting up Rofi configuration..."
+    mkdir -p "$ROFI_CONFIG_DIR/themes"
+    
+    # Copy from skel if available
+    if [[ -d "/etc/skel/.config/rofi" ]]; then
+        cp -r /etc/skel/.config/rofi/* "$ROFI_CONFIG_DIR/"
+    fi
+fi
+
+# =============================================================================
+# HYPRPAPER SETUP
+# =============================================================================
+
+HYPRPAPER_CONFIG="$HOME/.config/hypr/hyprpaper.conf"
+
+if [[ ! -f "$HYPRPAPER_CONFIG" ]] && [[ -f "/etc/skel/.config/hypr/hyprpaper.conf" ]]; then
+    echo "Setting up Hyprpaper configuration..."
+    cp "/etc/skel/.config/hypr/hyprpaper.conf" "$HYPRPAPER_CONFIG"
+fi
+
+# =============================================================================
+# ENVIRONMENT SETUP
+# =============================================================================
+
+# Ensure environment variables are set for current session
+if [[ -z "${XDG_CURRENT_DESKTOP:-}" ]] || [[ "$XDG_CURRENT_DESKTOP" != "Hyprland" ]]; then
+    echo "Setting Hyprland environment variables..."
+    export XDG_CURRENT_DESKTOP=Hyprland
+    export XDG_SESSION_DESKTOP=Hyprland
+    export XDG_SESSION_TYPE=wayland
+fi
+
+# =============================================================================
+# PERMISSIONS
+# =============================================================================
+
+# Set proper permissions on all config files
+chmod -R 644 "$USER_CONFIG_DIR"
+find "$USER_CONFIG_DIR" -type d -exec chmod 755 {} \;
+
+if [[ -d "$WAYBAR_CONFIG_DIR" ]]; then
+    chmod -R 644 "$WAYBAR_CONFIG_DIR"
+    find "$WAYBAR_CONFIG_DIR" -type d -exec chmod 755 {} \;
+fi
+
+if [[ -d "$ROFI_CONFIG_DIR" ]]; then
+    chmod -R 644 "$ROFI_CONFIG_DIR"
+    find "$ROFI_CONFIG_DIR" -type d -exec chmod 755 {} \;
+fi
+
+# =============================================================================
+# FIRST RUN SETUP
+# =============================================================================
+
+FIRST_RUN_MARKER="$USER_CONFIG_DIR/.hypr-setup-complete"
+
+if [[ ! -f "$FIRST_RUN_MARKER" ]]; then
+    echo "Performing first-time setup..."
+    
+    # Create directories for screenshots and other user content
+    mkdir -p "$HOME/Pictures/Screenshots"
+    mkdir -p "$HOME/.local/share/hyprland"
+    
+    # Mark setup as complete
+    touch "$FIRST_RUN_MARKER"
+    
+    echo ""
+    echo "Hyprland setup completed!"
+    echo ""
+    echo "Key points:"
+    echo "- Main modifier key is set to ALT"
+    echo "- ALT+Q: Open terminal"
+    echo "- ALT+R: Open application launcher"
+    echo "- ALT+E: Open file manager"
+    echo "- ALT+F1: Show keybinding help"
+    echo ""
+    echo "Configuration files are in ~/.config/hypr/"
+    echo "Edit ~/.config/hypr/keybinds.conf to customize keybindings"
+    echo ""
+else
+    echo "Hyprland configuration updated successfully!"
+fi
+
+echo "Setup completed for user: $USER"

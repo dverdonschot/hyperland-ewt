@@ -1,0 +1,263 @@
+#!/usr/bin/env bash
+
+# Hyprland Configuration Update Script
+# Updates user configurations while preserving customizations
+
+set -euo pipefail
+
+USER_CONFIG_DIR="$HOME/.config/hypr"
+SYSTEM_CONFIG_DIR="/etc/hypr"
+BACKUP_DIR="$HOME/.config/hypr/backups/$(date +%Y%m%d-%H%M%S)"
+
+echo "Hyprland Configuration Update Tool"
+echo "=================================="
+
+# =============================================================================
+# HELP FUNCTION
+# =============================================================================
+
+show_help() {
+    cat << EOF
+Usage: hypr-update-config [OPTIONS]
+
+Update Hyprland configuration files from system defaults while preserving
+user customizations.
+
+OPTIONS:
+    -f, --force         Force update all files (overwrites user changes)
+    -b, --backup        Create backup before updating
+    -d, --dry-run       Show what would be updated without making changes
+    -h, --help          Show this help message
+    -l, --list          List configuration files and their status
+
+EXAMPLES:
+    hypr-update-config              # Interactive update
+    hypr-update-config --backup     # Update with backup
+    hypr-update-config --dry-run    # Preview changes
+    hypr-update-config --force      # Force overwrite all files
+
+CONFIGURATION FILES:
+    - hyprland.conf     : Main configuration file
+    - keybinds.conf     : Keybinding definitions
+    - startup.conf      : Autostart applications
+    - window-rules.conf : Window management rules
+    - monitors.conf     : Monitor configuration
+    - themes/           : Theme configurations
+EOF
+}
+
+# =============================================================================
+# OPTION PARSING
+# =============================================================================
+
+FORCE_UPDATE=false
+CREATE_BACKUP=false
+DRY_RUN=false
+LIST_ONLY=false
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -f|--force)
+            FORCE_UPDATE=true
+            shift
+            ;;
+        -b|--backup)
+            CREATE_BACKUP=true
+            shift
+            ;;
+        -d|--dry-run)
+            DRY_RUN=true
+            shift
+            ;;
+        -l|--list)
+            LIST_ONLY=true
+            shift
+            ;;
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            show_help
+            exit 1
+            ;;
+    esac
+done
+
+# =============================================================================
+# UTILITY FUNCTIONS
+# =============================================================================
+
+create_backup() {
+    if [[ "$CREATE_BACKUP" == true ]] && [[ -d "$USER_CONFIG_DIR" ]]; then
+        echo "Creating backup at: $BACKUP_DIR"
+        mkdir -p "$BACKUP_DIR"
+        cp -r "$USER_CONFIG_DIR/"* "$BACKUP_DIR/" 2>/dev/null || true
+    fi
+}
+
+file_status() {
+    local filename="$1"
+    local system_file="$SYSTEM_CONFIG_DIR/$filename"
+    local user_file="$USER_CONFIG_DIR/$filename"
+    
+    if [[ ! -f "$system_file" ]]; then
+        echo "MISSING_SYSTEM"
+    elif [[ ! -f "$user_file" ]]; then
+        echo "MISSING_USER"
+    elif [[ "$system_file" -nt "$user_file" ]]; then
+        echo "OUTDATED"
+    elif [[ "$user_file" -nt "$system_file" ]]; then
+        echo "MODIFIED"
+    else
+        echo "UP_TO_DATE"
+    fi
+}
+
+list_configuration_status() {
+    echo "Configuration File Status:"
+    echo "========================="
+    
+    local files=("hyprland.conf" "keybinds.conf" "startup.conf" "window-rules.conf" "monitors.conf")
+    
+    for file in "${files[@]}"; do
+        local status=$(file_status "$file")
+        printf "%-20s: %s\n" "$file" "$status"
+    done
+    
+    echo ""
+    echo "Status Legend:"
+    echo "  UP_TO_DATE    - File is current"
+    echo "  OUTDATED      - System file is newer"
+    echo "  MODIFIED      - User file is newer (customized)"
+    echo "  MISSING_USER  - User file doesn't exist"
+    echo "  MISSING_SYSTEM- System file doesn't exist"
+}
+
+update_file() {
+    local filename="$1"
+    local system_file="$SYSTEM_CONFIG_DIR/$filename"
+    local user_file="$USER_CONFIG_DIR/$filename"
+    local status=$(file_status "$filename")
+    
+    if [[ "$DRY_RUN" == true ]]; then
+        case "$status" in
+            "OUTDATED"|"MISSING_USER")
+                echo "WOULD UPDATE: $filename"
+                ;;
+            "MODIFIED")
+                if [[ "$FORCE_UPDATE" == true ]]; then
+                    echo "WOULD OVERWRITE: $filename (user modifications will be lost)"
+                else
+                    echo "WOULD SKIP: $filename (user modified, use --force to overwrite)"
+                fi
+                ;;
+            "UP_TO_DATE")
+                echo "WOULD SKIP: $filename (already up to date)"
+                ;;
+            "MISSING_SYSTEM")
+                echo "WOULD SKIP: $filename (system file missing)"
+                ;;
+        esac
+        return
+    fi
+    
+    case "$status" in
+        "OUTDATED"|"MISSING_USER")
+            echo "Updating: $filename"
+            mkdir -p "$(dirname "$user_file")"
+            cp "$system_file" "$user_file"
+            chmod 644 "$user_file"
+            ;;
+        "MODIFIED")
+            if [[ "$FORCE_UPDATE" == true ]]; then
+                echo "Overwriting: $filename (user modifications lost)"
+                cp "$system_file" "$user_file"
+                chmod 644 "$user_file"
+            else
+                echo "Skipping: $filename (user modified, use --force to overwrite)"
+                echo "  System: $(stat -c %Y "$system_file")"
+                echo "  User:   $(stat -c %Y "$user_file")"
+            fi
+            ;;
+        "UP_TO_DATE")
+            echo "Skipping: $filename (already up to date)"
+            ;;
+        "MISSING_SYSTEM")
+            echo "Skipping: $filename (system file missing)"
+            ;;
+    esac
+}
+
+# =============================================================================
+# MAIN EXECUTION
+# =============================================================================
+
+# Check if Hyprland config directory exists
+if [[ ! -d "$USER_CONFIG_DIR" ]]; then
+    echo "Hyprland configuration directory not found."
+    echo "Run 'hypr-setup' first to initialize configuration."
+    exit 1
+fi
+
+# Check if system config directory exists
+if [[ ! -d "$SYSTEM_CONFIG_DIR" ]]; then
+    echo "Error: System configuration directory not found at $SYSTEM_CONFIG_DIR"
+    exit 1
+fi
+
+# Handle list-only mode
+if [[ "$LIST_ONLY" == true ]]; then
+    list_configuration_status
+    exit 0
+fi
+
+# Handle dry-run mode
+if [[ "$DRY_RUN" == true ]]; then
+    echo "DRY RUN - No changes will be made"
+    echo "================================"
+fi
+
+# Create backup if requested
+create_backup
+
+# Update configuration files
+echo "Updating Hyprland configuration files..."
+echo ""
+
+CONFIG_FILES=("hyprland.conf" "keybinds.conf" "startup.conf" "window-rules.conf" "monitors.conf")
+
+for file in "${CONFIG_FILES[@]}"; do
+    update_file "$file"
+done
+
+# Update themes directory
+if [[ -d "$SYSTEM_CONFIG_DIR/themes" ]]; then
+    if [[ "$DRY_RUN" == true ]]; then
+        echo "WOULD UPDATE: themes directory"
+    else
+        echo "Updating: themes directory"
+        mkdir -p "$USER_CONFIG_DIR/themes"
+        cp -r "$SYSTEM_CONFIG_DIR/themes/"* "$USER_CONFIG_DIR/themes/" 2>/dev/null || true
+    fi
+fi
+
+echo ""
+
+if [[ "$DRY_RUN" == true ]]; then
+    echo "Dry run completed. No changes were made."
+    echo "Run without --dry-run to apply these changes."
+else
+    echo "Configuration update completed!"
+    
+    if [[ "$CREATE_BACKUP" == true ]]; then
+        echo "Backup created at: $BACKUP_DIR"
+    fi
+    
+    echo ""
+    echo "Next steps:"
+    echo "- Review your updated configurations in ~/.config/hypr/"
+    echo "- Reload Hyprland with ALT+SHIFT+R to apply changes"
+    echo "- Run 'hypr-keybind-help' to see current keybindings"
+fi

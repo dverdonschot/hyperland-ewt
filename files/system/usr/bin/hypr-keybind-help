@@ -1,0 +1,428 @@
+#!/usr/bin/env bash
+
+# Hyprland Keybinding Help Script
+# Displays current keybindings in a user-friendly format
+
+set -euo pipefail
+
+KEYBINDS_FILE="$HOME/.config/hypr/keybinds.conf"
+SYSTEM_KEYBINDS_FILE="/etc/hypr/keybinds.conf"
+
+# =============================================================================
+# HELP FUNCTION
+# =============================================================================
+
+show_help() {
+    cat << EOF
+Usage: hypr-keybind-help [OPTIONS]
+
+Display Hyprland keybindings in a readable format.
+
+OPTIONS:
+    -f, --file FILE     Use specific keybinds file (default: ~/.config/hypr/keybinds.conf)
+    -c, --category CAT  Show only specific category (system, apps, window, workspace, etc.)
+    -s, --search TERM   Search for keybindings containing TERM
+    -r, --rofi          Display in rofi menu (interactive)
+    -h, --help          Show this help message
+
+CATEGORIES:
+    system      - System control (exit, lock, reload)
+    apps        - Application launchers
+    window      - Window management
+    workspace   - Workspace navigation
+    media       - Media and volume controls
+    screenshot  - Screenshot utilities
+    all         - All keybindings (default)
+
+EXAMPLES:
+    hypr-keybind-help                    # Show all keybindings
+    hypr-keybind-help -c apps            # Show only app launchers
+    hypr-keybind-help -s terminal        # Search for terminal-related binds
+    hypr-keybind-help -r                 # Show in rofi menu
+EOF
+}
+
+# =============================================================================
+# OPTION PARSING
+# =============================================================================
+
+KEYBINDS_SOURCE="$KEYBINDS_FILE"
+CATEGORY="all"
+SEARCH_TERM=""
+USE_ROFI=false
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -f|--file)
+            KEYBINDS_SOURCE="$2"
+            shift 2
+            ;;
+        -c|--category)
+            CATEGORY="$2"
+            shift 2
+            ;;
+        -s|--search)
+            SEARCH_TERM="$2"
+            shift 2
+            ;;
+        -r|--rofi)
+            USE_ROFI=true
+            shift
+            ;;
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            show_help
+            exit 1
+            ;;
+    esac
+done
+
+# =============================================================================
+# UTILITY FUNCTIONS
+# =============================================================================
+
+# Find the keybinds file to use
+find_keybinds_file() {
+    if [[ -f "$KEYBINDS_SOURCE" ]]; then
+        echo "$KEYBINDS_SOURCE"
+    elif [[ -f "$SYSTEM_KEYBINDS_FILE" ]]; then
+        echo "$SYSTEM_KEYBINDS_FILE"
+    else
+        echo "Error: No keybinds file found!" >&2
+        echo "Expected: $KEYBINDS_FILE or $SYSTEM_KEYBINDS_FILE" >&2
+        exit 1
+    fi
+}
+
+# Extract the current modifier key from config
+get_mod_key() {
+    local file="$1"
+    grep "^\$mainMod = " "$file" | head -1 | cut -d' ' -f3 || echo "ALT"
+}
+
+# Parse keybindings from the config file
+parse_keybindings() {
+    local file="$1"
+    local mod_key="$2"
+    
+    # Extract bind lines and format them
+    grep "^bind[em]*[[:space:]]*=" "$file" | while read -r line; do
+        # Parse the bind line
+        local bind_type=$(echo "$line" | cut -d'=' -f1 | tr -d ' ')
+        local bind_def=$(echo "$line" | cut -d'=' -f2- | sed 's/^[[:space:]]*//')
+        
+        # Split by comma
+        IFS=',' read -ra PARTS <<< "$bind_def"
+        
+        if [[ ${#PARTS[@]} -ge 3 ]]; then
+            local key_combo="${PARTS[0]// /}"
+            local action="${PARTS[1]// /}"
+            local params="${PARTS[2]// /}"
+            
+            # Replace $mainMod with actual key
+            key_combo="${key_combo//\$mainMod/$mod_key}"
+            
+            # Format for display
+            echo "$key_combo|$action|$params"
+        fi
+    done
+}
+
+# Categorize keybindings
+categorize_binding() {
+    local key_combo="$1"
+    local action="$2"
+    local params="$3"
+    
+    case "$action" in
+        "exec")
+            case "$params" in
+                *terminal*|*kitty*|*alacritty*)
+                    echo "apps"
+                    ;;
+                *rofi*|*dmenu*)
+                    echo "apps"
+                    ;;
+                *firefox*|*browser*)
+                    echo "apps"
+                    ;;
+                *thunar*|*fileManager*)
+                    echo "apps"
+                    ;;
+                *code*|*editor*)
+                    echo "apps"
+                    ;;
+                *grim*|*screenshot*)
+                    echo "screenshot"
+                    ;;
+                *swaylock*|*lock*)
+                    echo "system"
+                    ;;
+                *wpctl*|*volume*)
+                    echo "media"
+                    ;;
+                *brightnessctl*)
+                    echo "media"
+                    ;;
+                *playerctl*)
+                    echo "media"
+                    ;;
+                *)
+                    echo "apps"
+                    ;;
+            esac
+            ;;
+        "killactive"|"exit"|"reload")
+            echo "system"
+            ;;
+        "togglefloating"|"fullscreen"|"pseudo"|"togglesplit"|"movefocus"|"movewindow"|"resizeactive")
+            echo "window"
+            ;;
+        "workspace"|"movetoworkspace"|"togglespecialworkspace")
+            echo "workspace"
+            ;;
+        "cyclenext"|"changegroupactive"|"togglegroup")
+            echo "window"
+            ;;
+        *)
+            echo "other"
+            ;;
+    esac
+}
+
+# Format keybinding for display
+format_keybinding() {
+    local key_combo="$1"
+    local action="$2"
+    local params="$3"
+    
+    # Create human-readable description
+    local description=""
+    
+    case "$action" in
+        "exec")
+            case "$params" in
+                *\$terminal*|*kitty*|*alacritty*)
+                    description="Open Terminal"
+                    ;;
+                *\$menu*|*rofi*)
+                    description="Open Application Launcher"
+                    ;;
+                *\$browser*|*firefox*)
+                    description="Open Web Browser"
+                    ;;
+                *\$fileManager*|*thunar*)
+                    description="Open File Manager"
+                    ;;
+                *code*)
+                    description="Open Code Editor"
+                    ;;
+                *grim*)
+                    if [[ "$params" == *"slurp"* ]]; then
+                        description="Take Area Screenshot"
+                    else
+                        description="Take Full Screenshot"
+                    fi
+                    ;;
+                *swaylock*)
+                    description="Lock Screen"
+                    ;;
+                *wpctl*5%+*)
+                    description="Increase Volume"
+                    ;;
+                *wpctl*5%-*)
+                    description="Decrease Volume"
+                    ;;
+                *wpctl*toggle*)
+                    description="Toggle Mute"
+                    ;;
+                *brightnessctl*+*)
+                    description="Increase Brightness"
+                    ;;
+                *brightnessctl*-*)
+                    description="Decrease Brightness"
+                    ;;
+                *playerctl*play-pause*)
+                    description="Play/Pause Media"
+                    ;;
+                *playerctl*next*)
+                    description="Next Track"
+                    ;;
+                *playerctl*previous*)
+                    description="Previous Track"
+                    ;;
+                *)
+                    description="Execute: $(basename "$params")"
+                    ;;
+            esac
+            ;;
+        "killactive")
+            description="Close Window"
+            ;;
+        "exit")
+            description="Exit Hyprland"
+            ;;
+        "togglefloating")
+            description="Toggle Floating Mode"
+            ;;
+        "fullscreen")
+            if [[ "$params" == "0" ]]; then
+                description="Toggle Fullscreen"
+            else
+                description="Toggle Maximize"
+            fi
+            ;;
+        "pseudo")
+            description="Toggle Pseudo Tiling"
+            ;;
+        "togglesplit")
+            description="Toggle Split Direction"
+            ;;
+        "movefocus")
+            case "$params" in
+                "l") description="Focus Left Window" ;;
+                "r") description="Focus Right Window" ;;
+                "u") description="Focus Up Window" ;;
+                "d") description="Focus Down Window" ;;
+                *) description="Move Focus" ;;
+            esac
+            ;;
+        "movewindow")
+            case "$params" in
+                "l") description="Move Window Left" ;;
+                "r") description="Move Window Right" ;;
+                "u") description="Move Window Up" ;;
+                "d") description="Move Window Down" ;;
+                *) description="Move Window" ;;
+            esac
+            ;;
+        "resizeactive")
+            if [[ "$params" == *"-"* ]]; then
+                description="Resize Window Smaller"
+            else
+                description="Resize Window Larger"
+            fi
+            ;;
+        "workspace")
+            if [[ "$params" =~ ^[0-9]+$ ]]; then
+                description="Switch to Workspace $params"
+            elif [[ "$params" == "e+1" ]]; then
+                description="Next Workspace"
+            elif [[ "$params" == "e-1" ]]; then
+                description="Previous Workspace"
+            else
+                description="Switch Workspace"
+            fi
+            ;;
+        "movetoworkspace")
+            if [[ "$params" =~ ^[0-9]+$ ]]; then
+                description="Move to Workspace $params"
+            else
+                description="Move to Workspace"
+            fi
+            ;;
+        "togglespecialworkspace")
+            description="Toggle Scratchpad"
+            ;;
+        "cyclenext")
+            description="Cycle Windows"
+            ;;
+        "togglegroup")
+            description="Toggle Window Group"
+            ;;
+        "changegroupactive")
+            description="Change Active Group Window"
+            ;;
+        "reload")
+            description="Reload Configuration"
+            ;;
+        *)
+            description="$action $params"
+            ;;
+    esac
+    
+    # Format key combination for display
+    local display_key="$key_combo"
+    display_key="${display_key// SHIFT/+Shift}"
+    display_key="${display_key// CTRL/+Ctrl}"
+    display_key="${display_key// ALT/+Alt}"
+    display_key="${display_key// SUPER/+Super}"
+    
+    printf "%-25s %s\n" "$display_key" "$description"
+}
+
+# Display in rofi
+show_in_rofi() {
+    local content="$1"
+    echo "$content" | rofi -dmenu -i -p "Hyprland Keybindings" \
+        -theme-str 'window { width: 50%; height: 60%; }' \
+        -theme-str 'listview { lines: 20; }' \
+        -no-custom
+}
+
+# =============================================================================
+# MAIN EXECUTION
+# =============================================================================
+
+# Find keybinds file
+KEYBINDS_FILE_PATH=$(find_keybinds_file)
+MOD_KEY=$(get_mod_key "$KEYBINDS_FILE_PATH")
+
+echo "Hyprland Keybindings (Mod Key: $MOD_KEY)"
+echo "========================================"
+echo ""
+
+# Parse keybindings
+declare -A categorized_bindings
+declare -a categories=("system" "apps" "window" "workspace" "screenshot" "media" "other")
+
+while IFS='|' read -r key_combo action params; do
+    local category=$(categorize_binding "$key_combo" "$action" "$params")
+    local formatted=$(format_keybinding "$key_combo" "$action" "$params")
+    
+    # Apply search filter if specified
+    if [[ -n "$SEARCH_TERM" ]]; then
+        if [[ ! "$formatted" =~ $SEARCH_TERM ]]; then
+            continue
+        fi
+    fi
+    
+    # Apply category filter
+    if [[ "$CATEGORY" != "all" ]] && [[ "$category" != "$CATEGORY" ]]; then
+        continue
+    fi
+    
+    categorized_bindings["$category"]+="$formatted"$'\n'
+done < <(parse_keybindings "$KEYBINDS_FILE_PATH" "$MOD_KEY")
+
+# Generate output
+output=""
+
+for category in "${categories[@]}"; do
+    if [[ -n "${categorized_bindings[$category]:-}" ]]; then
+        case "$category" in
+            "system") section_title="System Control" ;;
+            "apps") section_title="Applications" ;;
+            "window") section_title="Window Management" ;;
+            "workspace") section_title="Workspace Navigation" ;;
+            "screenshot") section_title="Screenshots" ;;
+            "media") section_title="Media & Volume" ;;
+            "other") section_title="Other" ;;
+        esac
+        
+        output+="$section_title:"$'\n'
+        output+="$(printf '%.0s-' {1..20})"$'\n'
+        output+="${categorized_bindings[$category]}"$'\n'
+    fi
+done
+
+# Display output
+if [[ "$USE_ROFI" == true ]] && command -v rofi >/dev/null 2>&1; then
+    show_in_rofi "$output"
+else
+    echo "$output" | less -R
+fi

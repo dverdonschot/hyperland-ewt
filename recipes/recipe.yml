@@ -3,7 +3,7 @@
 # image will be published to ghcr.io/<user>/<name>
 name: hyperland-ewt
 # description will be included in the image's metadata
-description: This is my personal OS image.
+description: Personal Hyprland-based OS image with efficient tiling window management.
 
 # the base image to build on top of (FROM) and the version tag to use
 base-image: ghcr.io/ublue-os/silverblue-main
@@ -20,17 +20,48 @@ modules:
   - type: dnf
     repos:
       copr:
-        - atim/starship
+        - solopasha/hyprland  # Primary Hyprland packages
+        - atim/starship       # Shell prompt
     install:
       packages:
+        # Core Hyprland ecosystem
+        - hyprland
+        - xdg-desktop-portal-hyprland
+        - hyprland-contrib
+        - hyprpaper
+        - hyprpicker
+        
+        # Essential Wayland ecosystem
+        - waybar              # Status bar
+        - rofi-wayland        # Application launcher
+        - kitty               # Terminal emulator
+        - dunst               # Notifications
+        - thunar              # File manager
+        - qt5-qtwayland       # Qt5 Wayland support
+        - qt6-qtwayland       # Qt6 Wayland support
+        
+        # System utilities
+        - brightnessctl       # Brightness control
+        - fastfetch           # System info
+        - jq                  # JSON processor
+        - grim                # Screenshot utility
+        - slurp               # Screen area selection
+        - wl-clipboard        # Wayland clipboard
+        - swaylock            # Screen locker
+        - wlogout             # Logout menu
+        
+        # Keep existing tools
         - micro
         - starship
     remove:
       packages:
-        # example: removing firefox (in favor of the flatpak)
-        # "firefox" is the main package, "firefox-langpacks" is a dependency
+        # Remove GNOME components that conflict with Hyprland
         - firefox
-        - firefox-langpacks # also remove firefox dependency (not required for all packages, this is a special case)
+        - firefox-langpacks
+        - gnome-shell-extension-apps-menu
+        - gnome-shell-extension-launch-new-instance
+        - gnome-shell-extension-places-menu
+        - gnome-shell-extension-window-list
 
   - type: default-flatpaks
     configurations:
@@ -40,6 +71,11 @@ modules:
         install: # system flatpaks we want all users to have and not remove
           - org.mozilla.firefox
           - org.gnome.Loupe
+          - com.github.tchx84.Flatseal  # Flatpak permissions manager
       - scope: user # Also add Flathub user repo, but no user packages
+
+  - type: script
+    scripts:
+      - hypr-post-install.sh  # Post-installation Hyprland setup
 
   - type: signing # this sets up the proper policy & signing files for signed images to work fully
