@@ -14,8 +14,8 @@ echo "Setting up Hyprpaper configuration..."
 mkdir -p /etc/skel/.config/hypr
 
 cat > /etc/skel/.config/hypr/hyprpaper.conf << 'EOF'
-preload = /usr/share/backgrounds/default.jpg
-wallpaper = , /usr/share/backgrounds/default.jpg
+preload = /usr/share/backgrounds/nature-mountains.jpg
+wallpaper = , /usr/share/backgrounds/nature-mountains.jpg
 splash = false
 EOF
 

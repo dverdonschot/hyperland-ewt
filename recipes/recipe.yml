@@ -56,6 +56,10 @@ modules:
         - oh-my-posh
         - tmux
         
+        # Fonts
+        - fontconfig
+        - nerd-fonts-hack
+        
         # Development tools for Homebrew support
         - curl
         - git
