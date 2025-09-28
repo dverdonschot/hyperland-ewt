@@ -53,6 +53,16 @@ modules:
         # Keep existing tools
         - micro
         - starship
+        - oh-my-posh
+        - tmux
+        
+        # Development tools for Homebrew support
+        - curl
+        - git
+        - gcc
+        - gcc-c++
+        - make
+        - procps-ng
     remove:
       packages:
         # Remove GNOME components that conflict with Hyprland
