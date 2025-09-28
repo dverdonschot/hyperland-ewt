@@ -16,7 +16,7 @@ cat > /usr/share/wayland-sessions/hyprland.desktop << 'EOF'
 [Desktop Entry]
 Name=Hyprland
 Comment=An intelligent dynamic tiling Wayland compositor
-Exec=Hyprland
+Exec=hyprland
 Type=Application
 DesktopNames=Hyprland
 EOF
@@ -26,7 +26,7 @@ cat > /usr/share/xsessions/hyprland.desktop << 'EOF'
 [Desktop Entry]
 Name=Hyprland
 Comment=An intelligent dynamic tiling Wayland compositor
-Exec=Hyprland
+Exec=hyprland
 Type=Application
 DesktopNames=Hyprland
 EOF
