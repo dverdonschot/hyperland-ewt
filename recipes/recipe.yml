@@ -22,6 +22,7 @@ modules:
       copr:
         - solopasha/hyprland  # Primary Hyprland packages
         - atim/starship       # Shell prompt
+        - aquacash5/nerd-fonts # Nerd Fonts collection
     install:
       packages:
         # Core Hyprland ecosystem
@@ -58,7 +59,7 @@ modules:
         
         # Fonts
         - fontconfig
-        - nerd-fonts-hack
+        - hack-nerd-fonts
         
         # Development tools for Homebrew support
         - curl
