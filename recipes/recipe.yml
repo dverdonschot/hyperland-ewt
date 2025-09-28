@@ -67,6 +67,10 @@ modules:
         - gcc-c++
         - make
         - procps-ng
+        
+        # Code editors and development environment
+        - nodejs                  # Required for Claude Code CLI
+        - npm                     # Package manager for Claude Code
     remove:
       packages:
         # Remove GNOME components that conflict with Hyprland

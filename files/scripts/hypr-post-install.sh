@@ -36,6 +36,9 @@ bash "${SCRIPT_DIR}/setup-tmux.sh"
 echo "Running Homebrew configuration setup..."
 bash "${SCRIPT_DIR}/setup-homebrew.sh"
 
+echo "Running development tools setup..."
+bash "${SCRIPT_DIR}/setup-development.sh"
+
 # =============================================================================
 # ENABLE SERVICES
 # =============================================================================
