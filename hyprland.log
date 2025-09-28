@@ -1,0 +1,188 @@
+--------------------------------------------
+   Hyprland Crash Report
+--------------------------------------------
+Oops
+
+Hyprland received signal 6(ABRT)
+Version: 71a1216abcc7031776630a6d88f105605c4dc1c9
+Tag: v0.51.1
+Date: Mon Sep 22 20:54:03 2025
+Flags:
+
+System info:
+	System name: Linux
+	Node name: um790
+	Release: 6.16.8-200.fc42.x86_64
+	Version: #1 SMP PREEMPT_DYNAMIC Fri Sep 19 17:47:18 UTC 2025
+
+GPU:
+	c5:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Phoenix1 [1002:15bf] (rev c1) (prog-if 00 [VGA controller])
+
+
+os-release:
+	NAME="Fedora Linux"
+	VERSION="42.20250928.0 (Silverblue)"
+	RELEASE_TYPE=stable
+	ID=fedora
+	VERSION_ID=42
+	VERSION_CODENAME=""
+	PLATFORM_ID="platform:f42"
+	PRETTY_NAME="Fedora Linux 42.20250928.0 (Silverblue)"
+	ANSI_COLOR="0;38;2;60;110;180"
+	LOGO=fedora-logo-icon
+	CPE_NAME="cpe:/o:fedoraproject:fedora:42"
+	DEFAULT_HOSTNAME="fedora"
+	HOME_URL="https://silverblue.fedoraproject.org"
+	DOCUMENTATION_URL="https://docs.fedoraproject.org/en-US/fedora-silverblue/"
+	SUPPORT_URL="https://ask.fedoraproject.org/"
+	BUG_REPORT_URL="https://github.com/fedora-silverblue/issue-tracker/issues"
+	REDHAT_BUGZILLA_PRODUCT="Fedora"
+	REDHAT_BUGZILLA_PRODUCT_VERSION=42
+	REDHAT_SUPPORT_PRODUCT="Fedora"
+	REDHAT_SUPPORT_PRODUCT_VERSION=42
+	SUPPORT_END=2026-05-13
+	VARIANT="Silverblue"
+	VARIANT_ID=silverblue
+	OSTREE_VERSION='42.20250928.0'
+Backtrace:
+	# | hyprland(_Z12getBacktracev+0x60) [0x55e2c954be80]
+		getBacktrace()
+		??:?
+	#1 | hyprland(_ZN14NCrashReporter18createAndSaveCrashEi+0x150e) [0x55e2c949f4ae]
+		NCrashReporter::createAndSaveCrash(int)
+		??:?
+	#2 | hyprland(+0x164dd3) [0x55e2c940bdd3]
+		CCompositor::getMonitorFromCursor()
+		??:?
+	#3 | /lib64/libc.so.6(+0x1a070) [0x7fc5be6a2070]
+		??
+		??:0
+	#4 | /lib64/libc.so.6(+0x73e9c) [0x7fc5be6fbe9c]
+		??
+		??:0
+	#5 | /lib64/libc.so.6(gsignal+0x1e) [0x7fc5be6a1f3e]
+		??
+		??:0
+	#6 | /lib64/libc.so.6(abort+0x26) [0x7fc5be6896d0]
+		??
+		??:0
+	#7 | /lib64/libstdc++.so.6(+0x91b4) [0x7fc5be99f1b4]
+		??
+		??:0
+	#8 | /lib64/libstdc++.so.6(+0x1eb9c) [0x7fc5be9b4b9c]
+		??
+		??:0
+	#9 | /lib64/libstdc++.so.6(_ZSt10unexpectedv+0) [0x7fc5be99ed3a]
+		??
+		??:0
+	#1 | /lib64/libstdc++.so.6(+0x1ee48) [0x7fc5be9b4e48]
+		??
+		??:0
+	#11 | hyprland(+0x3e5d7) [0x55e2c92e55d7]
+		??
+		??:0
+	#12 | hyprland(_ZN11CCompositor10initServerENSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEi+0x15d8) [0x55e2c94126a8]
+		CCompositor::initServer(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int)
+		??:?
+	#13 | hyprland(main+0xdb5) [0x55e2c93a8cf5]
+		main
+		??:?
+	#14 | /lib64/libc.so.6(+0x3575) [0x7fc5be68b575]
+		??
+		??:0
+	#15 | /lib64/libc.so.6(__libc_start_main+0x88) [0x7fc5be68b628]
+		??
+		??:0
+	#16 | hyprland(_start+0x25) [0x55e2c9406ed5]
+		_start
+		??:?
+
+
+Log tail:
+[LOG] Runtime directory: /run/user/1000/hypr/71a1216abcc7031776630a6d88f105605c4dc1c9_1759040544_350443162
+[LOG] Hyprland PID: 4284
+[LOG] ===== SYSTEM INFO: =====
+[LOG] System name: Linux
+[LOG] Node name: um790
+[LOG] Release: 6.16.8-200.fc42.x86_64
+[LOG] Version: #1 SMP PREEMPT_DYNAMIC Fri Sep 19 17:47:18 UTC 2025
+
+
+[LOG] GPU information:
+c5:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Phoenix1 [1002:15bf] (rev c1) (prog-if 00 [VGA controller])
+
+
+[LOG] os-release:
+NAME="Fedora Linux"
+VERSION="42.20250928.0 (Silverblue)"
+RELEASE_TYPE=stable
+ID=fedora
+VERSION_ID=42
+VERSION_CODENAME=""
+PLATFORM_ID="platform:f42"
+PRETTY_NAME="Fedora Linux 42.20250928.0 (Silverblue)"
+ANSI_COLOR="0;38;2;60;110;180"
+LOGO=fedora-logo-icon
+CPE_NAME="cpe:/o:fedoraproject:fedora:42"
+DEFAULT_HOSTNAME="fedora"
+HOME_URL="https://silverblue.fedoraproject.org"
+DOCUMENTATION_URL="https://docs.fedoraproject.org/en-US/fedora-silverblue/"
+SUPPORT_URL="https://ask.fedoraproject.org/"
+BUG_REPORT_URL="https://github.com/fedora-silverblue/issue-tracker/issues"
+REDHAT_BUGZILLA_PRODUCT="Fedora"
+REDHAT_BUGZILLA_PRODUCT_VERSION=42
+REDHAT_SUPPORT_PRODUCT="Fedora"
+REDHAT_SUPPORT_PRODUCT_VERSION=42
+SUPPORT_END=2026-05-13
+VARIANT="Silverblue"
+VARIANT_ID=silverblue
+OSTREE_VERSION='42.20250928.0'
+[LOG] ========================
+
+
+
+[INFO] If you are crashing, or encounter any bugs, please consult https://wiki.hypr.land/Crashes-and-Bugs/
+
+
+[LOG] 
+Current splash: Segmentation fault (core dumped)
+
+
+[LOG] Old rlimit: soft -> 1024, hard -> 524288
+[LOG] New rlimit: soft -> 524288, hard -> 524288
+[LOG] Creating the EventLoopManager!
+[LOG] Creating the HookSystem!
+[LOG] Creating the KeybindManager!
+[LOG] Creating the AnimationManager!
+[LOG] Creating the DynamicPermissionManager!
+[LOG] Creating the ConfigManager!
+[WARN] Creating config home directory
+[WARN] No config file found; attempting to generate.
+[LOG] Using config: /home/ewt/.config/hypr/hyprland.conf
+[INFO] !!!!HEY YOU, YES YOU!!!!: further logs to stdout / logfile are disabled by default. BEFORE SENDING THIS LOG, ENABLE THEM. Use debug:disable_logs = false to do so: https://wiki.hypr.land/Configuring/Variables/#debug
+[LOG] Creating the CHyprError!
+[LOG] Creating the LayoutManager!
+[LOG] Creating the TokenManager!
+[LOG] [hookSystem] New hook event registered: preConfigReload
+[LOG] Using config: /home/ewt/.config/hypr/hyprland.conf
+[LOG] CWindowRule: direct prop rule found, rewritten nofocus -> prop nofocus
+[LOG] Disabling stdout logs! Check the log for further logs.
+[LOG] Creating the PointerManager!
+[LOG] Creating the EventManager!
+[LOG] [AQ] Creating an Aquamarine backend!
+[LOG] [AQ] [libseat] [libseat/backend/seatd.c:64] Could not connect to socket /run/seatd.sock: No such file or directory
+[LOG] [AQ] [libseat] [libseat/libseat.c:76] Backend 'seatd' failed to open seat, skipping
+[ERR] [AQ] [libseat] [libseat/backend/logind.c:302] Could not take control of session: Device or resource busy
+[LOG] [AQ] [libseat] [libseat/libseat.c:76] Backend 'logind' failed to open seat, skipping
+[ERR] [AQ] [libseat] [libseat/libseat.c:79] No backend was able to open a seat
+[ERR] [AQ] libseat: failed to open a seat
+[ERR] [AQ] Failed to open a session
+[ERR] [AQ] DRM Backend failed
+[LOG] [AQ] Starting the Aquamarine backend!
+[LOG] [AQ] Starting the Wayland backend!
+[LOG] [AQ] Connected to a wayland compositor: Hyprland
+[LOG] [AQ] Got registry at 0x55e2dc0cfcd0
+[LOG] [AQ] Output WAYLAND-1: initialized
+[CRITICAL] [AQ] Cannot open backend: no allocator available
+[CRITICAL] m_pAqBackend couldn't start! This usually means aquamarine could not find a GPU or encountered some issues. Make sure you're running either on a tty or on a Wayland session, NOT an X11 one.
+[CRITICAL] Critical error thrown: CBackend::create() failed!
