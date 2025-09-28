@@ -2,4 +2,6 @@
 Name=Hyprland
 Comment=An intelligent dynamic tiling Wayland compositor
 Exec=Hyprland
+TryExec=Hyprland
 Type=Application
+DesktopNames=Hyprland
