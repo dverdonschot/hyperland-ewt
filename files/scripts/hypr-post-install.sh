@@ -39,6 +39,9 @@ bash "${SCRIPT_DIR}/setup-homebrew.sh"
 echo "Running development tools setup..."
 bash "${SCRIPT_DIR}/setup-development.sh"
 
+echo "Running virtualization and container setup..."
+bash "${SCRIPT_DIR}/setup-virtualization.sh"
+
 # =============================================================================
 # ENABLE SERVICES
 # =============================================================================

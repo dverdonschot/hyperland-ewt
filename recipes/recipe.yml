@@ -72,6 +72,71 @@ modules:
         # Code editors and development environment
         - nodejs                  # Required for Claude Code CLI
         - npm                     # Package manager for Claude Code
+        
+        # Container and virtualization tools
+        - podman                  # Container management
+        - podman-compose          # Docker-compose compatibility
+        - libvirt                 # Virtualization API
+        - libvirt-daemon-config-network  # Default network for libvirt
+        - libvirt-daemon-kvm      # KVM hypervisor daemon
+        - qemu-kvm                # QEMU virtualization
+        - virt-manager            # GUI for managing VMs
+        - virt-install            # Command line VM installation
+        - virt-viewer             # VM display viewer
+        
+        # Kubernetes tools
+        - k3s                     # Lightweight Kubernetes
+        - kubernetes-client       # kubectl command
+        - helm                    # Kubernetes package manager
+        
+        # Hardware and firmware tools
+        - qmk                     # QMK keyboard firmware
+        - arduino                 # Arduino IDE
+        
+        # Network diagnostic tools
+        - bind-utils              # nslookup, dig, host
+        - nmap                    # Network mapper
+        - nmap-ncat               # nc (netcat) replacement
+        - iputils                 # ping, traceroute
+        - iproute                 # ip command
+        - tcpdump                 # Packet analyzer
+        - wireshark               # Network protocol analyzer
+        - mtr                     # Network diagnostic tool (ping + traceroute)
+        
+        # System monitoring and resource tools
+        - htop                    # Interactive process viewer
+        - btop                    # Modern resource monitor
+        - iotop                   # I/O monitor
+        - iftop                   # Network bandwidth monitor
+        - nethogs                 # Per-process network monitor
+        - sysstat                 # Performance monitoring (sar, iostat, mpstat)
+        - lsof                    # List open files
+        - strace                  # System call tracer
+        
+        # USB and hardware tools
+        - usbutils                # lsusb, usb-devices
+        - pciutils                # lspci
+        - hwinfo                  # Hardware information
+        - lshw                    # Hardware lister
+        
+        # File and directory browsing
+        - tree                    # Directory tree viewer
+        - ranger                  # TUI file manager
+        - mc                      # Midnight Commander
+        - fzf                     # Fuzzy finder
+        - ripgrep                 # Fast grep alternative
+        - fd-find                 # Fast find alternative
+        - bat                     # Cat with syntax highlighting
+        - eza                     # Modern ls replacement
+        
+        # TUI applications
+        - lazygit                 # Git TUI
+        - lazydocker              # Docker/Podman TUI
+        - dive                    # Docker image explorer
+        - ctop                    # Container metrics TUI
+        - podman-tui              # Podman TUI
+        - systemctl-tui           # Systemd TUI (if available)
+        - ncdu                    # Disk usage analyzer
     remove:
       packages:
         # Remove GNOME components that conflict with Hyprland
@@ -92,6 +157,9 @@ modules:
           - org.gnome.Loupe
           - com.github.tchx84.Flatseal  # Flatpak permissions manager
           - io.freetubeapp.FreeTube
+          - dev.zed.Zed                  # Zed code editor
+          - io.github.zen_browser.zen    # Zen browser
+          - io.k9s.k9s                   # Kubernetes TUI
       - scope: user # Also add Flathub user repo, but no user packages
 
   - type: script
