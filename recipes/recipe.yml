@@ -91,6 +91,7 @@ modules:
           - org.mozilla.firefox
           - org.gnome.Loupe
           - com.github.tchx84.Flatseal  # Flatpak permissions manager
+          - io.freetubeapp.FreeTube
       - scope: user # Also add Flathub user repo, but no user packages
 
   - type: script
