@@ -38,16 +38,13 @@ modules:
         - kitty               # Terminal emulator
         - dunst               # Notifications
         - thunar              # File manager
-        - qt5-qtwayland       # Qt5 Wayland support
         - qt6-qtwayland       # Qt6 Wayland support
         
         # System utilities
         - brightnessctl       # Brightness control
         - fastfetch           # System info
-        - jq                  # JSON processor
         - grim                # Screenshot utility
         - slurp               # Screen area selection
-        - wl-clipboard        # Wayland clipboard
         - swaylock            # Screen locker
         - wlogout             # Logout menu
         
@@ -55,26 +52,21 @@ modules:
         - micro
         - starship
         - oh-my-posh
-        - tmux
         
         # Fonts
-        - fontconfig
         - hack-nerd-fonts
         
         # Development tools for Homebrew support
-        - curl
         - git
         - gcc
         - gcc-c++
         - make
-        - procps-ng
         
         # Code editors and development environment
         - nodejs                  # Required for Claude Code CLI
         - npm                     # Package manager for Claude Code
         
         # Container and virtualization tools
-        - podman                  # Container management
         - podman-compose          # Docker-compose compatibility
         - libvirt                 # Virtualization API
         - libvirt-daemon-config-network  # Default network for libvirt
@@ -85,26 +77,15 @@ modules:
         - virt-viewer             # VM display viewer
         
         # Kubernetes tools
-        - k3s                     # Lightweight Kubernetes
         - kubernetes-client       # kubectl command
         - helm                    # Kubernetes package manager
         
-        # Hardware and firmware tools
-        - qmk                     # QMK keyboard firmware
-        - arduino                 # Arduino IDE
-        
         # Network diagnostic tools
-        - bind-utils              # nslookup, dig, host
         - nmap                    # Network mapper
         - nmap-ncat               # nc (netcat) replacement
-        - iputils                 # ping, traceroute
-        - iproute                 # ip command
-        - tcpdump                 # Packet analyzer
         - wireshark               # Network protocol analyzer
-        - mtr                     # Network diagnostic tool (ping + traceroute)
         
         # System monitoring and resource tools
-        - htop                    # Interactive process viewer
         - btop                    # Modern resource monitor
         - iotop                   # I/O monitor
         - iftop                   # Network bandwidth monitor
