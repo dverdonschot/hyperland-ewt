@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Run user setup if needed (copies system configs to user directory)
+if [[ ! -f "$HOME/.config/hypr/.hypr-setup-complete" ]]; then
+    /usr/bin/hypr-setup
+fi
+
+# Launch Hyprland
+exec /usr/bin/hyprland "$@"

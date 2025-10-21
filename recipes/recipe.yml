@@ -127,15 +127,9 @@ modules:
         - ripgrep                 # Fast grep alternative
         - fd-find                 # Fast find alternative
         - bat                     # Cat with syntax highlighting
-        - eza                     # Modern ls replacement
         
-        # TUI applications
-        - lazygit                 # Git TUI
-        - lazydocker              # Docker/Podman TUI
-        - dive                    # Docker image explorer
-        - ctop                    # Container metrics TUI
+        # TUI applications (eza, lazygit, lazydocker, dive, ctop, systemctl-tui installed via setup-tui-tools.sh)
         - podman-tui              # Podman TUI
-        - systemctl-tui           # Systemd TUI (if available)
         - ncdu                    # Disk usage analyzer
     remove:
       packages:

@@ -42,6 +42,9 @@ bash "${SCRIPT_DIR}/setup-development.sh"
 echo "Running virtualization and container setup..."
 bash "${SCRIPT_DIR}/setup-virtualization.sh"
 
+echo "Installing TUI tools from alternative sources..."
+bash "${SCRIPT_DIR}/setup-tui-tools.sh"
+
 # =============================================================================
 # ENABLE SERVICES
 # =============================================================================
