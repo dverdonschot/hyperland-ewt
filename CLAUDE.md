@@ -65,7 +65,7 @@ This is a **Hyprland-based custom Fedora Atomic OS image** built with BlueBuild.
 - **System Monitoring**: `htop`, `btop`, `iotop`, `iftop`, `nethogs`, `sysstat`, `lsof`, `strace`
 - **File Browsing**: `tree`, `ranger`, `mc`, `fzf`, `ripgrep`, `fd-find`, `bat`, `eza`
 - **TUI Apps**: `lazygit`, `lazydocker`, `dive`, `ctop`, `podman-tui`, `ncdu`
-- **Flatpak Apps**: Zed editor, Zen browser, k9s (Kubernetes TUI)
+- **Flatpak Apps**: Zed editor, Zen browser
 
 ### Removed Packages
 - GNOME Shell extensions that conflict with Hyprland
@@ -88,7 +88,7 @@ This is a **Hyprland-based custom Fedora Atomic OS image** built with BlueBuild.
 Build sequence:
 1. **files** - Copies `files/system/` to root filesystem
 2. **dnf** - Installs Hyprland packages from COPR, removes conflicts
-3. **default-flatpaks** - Installs Firefox, GNOME Loupe, Flatseal, Zed, Zen browser, k9s
+3. **default-flatpaks** - Installs Firefox, GNOME Loupe, Flatseal, Zed, Zen browser
 4. **script** - Runs `hypr-post-install.sh` for system setup (includes virtualization setup)
 5. **signing** - Container signing infrastructure
 
@@ -216,7 +216,7 @@ hypr-setup
 - **Git**: `lazygit` (interactive Git interface)
 - **Containers**: `lazydocker` (Docker/Podman TUI), `ctop` (container metrics), `podman-tui`
 - **Images**: `dive` (explore Docker/Podman image layers)
-- **Kubernetes**: `k9s` (Kubernetes cluster management)
+- **Kubernetes**: `k9s` (Kubernetes cluster management - install via `brew install k9s`)
 
 ## Troubleshooting Commands
 

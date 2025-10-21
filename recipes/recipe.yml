@@ -128,7 +128,6 @@ modules:
           - io.freetubeapp.FreeTube
           - dev.zed.Zed                  # Zed code editor
           - io.github.zen_browser.zen    # Zen browser
-          - io.k9s.k9s                   # Kubernetes TUI
       - scope: user # Also add Flathub user repo, but no user packages
 
   - type: script
