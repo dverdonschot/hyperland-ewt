@@ -103,7 +103,7 @@ modules:
         - fd-find                 # Fast find alternative
         - bat                     # Cat with syntax highlighting
         
-        # TUI applications (eza, lazygit, lazydocker, dive, ctop, systemctl-tui installed via setup-tui-tools.sh)
+        # TUI applications
         - podman-tui              # Podman TUI
         - ncdu                    # Disk usage analyzer
     remove:
