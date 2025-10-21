@@ -42,14 +42,6 @@ install_from_github() {
     echo "${binary_name} installed successfully"
 }
 
-install_eza() {
-    echo "Installing eza..."
-    local version=$(curl -s https://api.github.com/repos/eza-community/eza/releases/latest | jq -r .tag_name)
-    curl -sL "https://github.com/eza-community/eza/releases/download/${version}/eza_x86_64-unknown-linux-gnu.tar.gz" | \
-        tar xz -C "${INSTALL_DIR}" eza
-    chmod 755 "${INSTALL_DIR}/eza"
-}
-
 install_lazygit() {
     install_from_github "jesseduffield/lazygit" "lazygit" "Linux_x86_64.tar.gz"
 }
