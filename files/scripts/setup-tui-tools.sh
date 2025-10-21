@@ -68,7 +68,6 @@ install_systemctl_tui() {
     rm -f "$tmpfile"
 }
 
-install_eza
 install_lazygit
 install_lazydocker
 install_dive
