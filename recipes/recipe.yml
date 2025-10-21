@@ -7,7 +7,7 @@ description: Personal Hyprland-based OS image with efficient tiling window manag
 
 # the base image to build on top of (FROM) and the version tag to use
 base-image: ghcr.io/ublue-os/silverblue-main
-image-version: 42 # latest is also supported if you want new updates ASAP
+image-version: latest # latest is also supported if you want new updates ASAP
 
 # module configuration, executed in order
 # you can include multiple instances of the same module
@@ -110,20 +110,14 @@ modules:
         - iftop                   # Network bandwidth monitor
         - nethogs                 # Per-process network monitor
         - sysstat                 # Performance monitoring (sar, iostat, mpstat)
-        - lsof                    # List open files
         - strace                  # System call tracer
         
         # USB and hardware tools
-        - usbutils                # lsusb, usb-devices
-        - pciutils                # lspci
         - hwinfo                  # Hardware information
-        - lshw                    # Hardware lister
         
         # File and directory browsing
-        - tree                    # Directory tree viewer
         - ranger                  # TUI file manager
         - mc                      # Midnight Commander
-        - fzf                     # Fuzzy finder
         - ripgrep                 # Fast grep alternative
         - fd-find                 # Fast find alternative
         - bat                     # Cat with syntax highlighting
