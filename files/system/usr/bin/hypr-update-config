@@ -6,7 +6,7 @@
 set -euo pipefail
 
 USER_CONFIG_DIR="$HOME/.config/hypr"
-SYSTEM_CONFIG_DIR="/etc/hypr"
+SYSTEM_CONFIG_DIR="/etc/xdg/hypr"
 BACKUP_DIR="$HOME/.config/hypr/backups/$(date +%Y%m%d-%H%M%S)"
 
 echo "Hyprland Configuration Update Tool"

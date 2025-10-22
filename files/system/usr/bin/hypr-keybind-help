@@ -6,7 +6,7 @@
 set -euo pipefail
 
 KEYBINDS_FILE="$HOME/.config/hypr/keybinds.conf"
-SYSTEM_KEYBINDS_FILE="/etc/hypr/keybinds.conf"
+SYSTEM_KEYBINDS_FILE="/etc/xdg/hypr/keybinds.conf"
 
 # =============================================================================
 # HELP FUNCTION
