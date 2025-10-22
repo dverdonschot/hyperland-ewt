@@ -42,6 +42,12 @@ bash "${SCRIPT_DIR}/setup-development.sh"
 echo "Running virtualization and container setup..."
 bash "${SCRIPT_DIR}/setup-virtualization.sh"
 
+echo "Running automatic updates setup..."
+bash "${SCRIPT_DIR}/setup-autoupdates.sh"
+
+echo "Running just command runner setup..."
+bash "${SCRIPT_DIR}/setup-just.sh"
+
 # =============================================================================
 # ENABLE SERVICES
 # =============================================================================

@@ -52,6 +52,7 @@ modules:
         - micro
         - starship
         - oh-my-posh
+        - just                # Command runner
         
         # Fonts
         - hack-nerd-fonts

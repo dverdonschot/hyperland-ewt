@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Hyprland
 Comment=An intelligent dynamic tiling Wayland compositor
-Exec=hyprland-wrapper
+Exec=/usr/bin/hyprland --config /etc/hypr/hyprland.conf
 TryExec=hyprland
 Type=Application
 DesktopNames=Hyprland
