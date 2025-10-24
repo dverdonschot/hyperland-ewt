@@ -48,6 +48,14 @@ modules:
         - swaylock            # Screen locker
         - wlogout             # Logout menu
         
+        # Audio system (PipeWire)
+        - pipewire-pulseaudio # PulseAudio compatibility
+        - wireplumber         # PipeWire session manager
+        - pavucontrol         # GUI audio control
+        - pamixer             # CLI volume control
+        - pwvucontrol         # Modern PipeWire GUI
+        - alsa-utils          # ALSA tools
+        
         # Keep existing tools
         - micro
         - starship
