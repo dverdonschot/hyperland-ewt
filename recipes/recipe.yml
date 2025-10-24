@@ -110,8 +110,6 @@ modules:
     remove:
       packages:
         # Remove GNOME components that conflict with Hyprland
-        - firefox
-        - firefox-langpacks
         - gnome-shell-extension-apps-menu
         - gnome-shell-extension-launch-new-instance
         - gnome-shell-extension-places-menu
