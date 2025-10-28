@@ -42,6 +42,9 @@ bash "${SCRIPT_DIR}/setup-development.sh"
 echo "Running virtualization and container setup..."
 bash "${SCRIPT_DIR}/setup-virtualization.sh"
 
+echo "Running audio system setup..."
+bash "${SCRIPT_DIR}/setup-sound.sh"
+
 echo "Running automatic updates setup..."
 bash "${SCRIPT_DIR}/setup-autoupdates.sh"
 

@@ -39,6 +39,8 @@ modules:
         - dunst               # Notifications
         - thunar              # File manager
         - qt6-qtwayland       # Qt6 Wayland support
+        - playerctl           # Media player control
+        - cliphist            # Clipboard history manager
         
         # System utilities
         - brightnessctl       # Brightness control
@@ -47,14 +49,27 @@ modules:
         - slurp               # Screen area selection
         - swaylock            # Screen locker
         - wlogout             # Logout menu
+        - wl-clipboard        # Wayland clipboard utilities
         
         # Audio system (PipeWire)
-        - pipewire-pulseaudio # PulseAudio compatibility
-        - wireplumber         # PipeWire session manager
-        - pavucontrol         # GUI audio control
-        - pamixer             # CLI volume control
-        - pwvucontrol         # Modern PipeWire GUI
-        - alsa-utils          # ALSA tools
+        - pipewire                # Core PipeWire
+        - pipewire-alsa           # ALSA compatibility
+        - pipewire-pulseaudio     # PulseAudio compatibility
+        - pipewire-utils          # pw-cli, pw-cat, etc.
+        - pipewire-jack-audio-connection-kit  # JACK compatibility
+        - wireplumber             # PipeWire session manager
+        - pavucontrol             # GUI audio control
+        - pamixer                 # CLI volume control
+        - pwvucontrol             # Modern PipeWire GUI
+        - alsa-utils              # ALSA tools
+        - alsa-plugins-pulseaudio # Additional ALSA plugins
+
+        # Bluetooth audio support (optional devices)
+        - pipewire-codec-aptx     # aptX codec support
+        - libldac                 # LDAC codec (Sony high-quality)
+        - libfreeaptx             # Free aptX implementation
+        - bluez                   # Bluetooth stack
+        - bluez-tools             # Bluetooth utilities
         
         # Keep existing tools
         - micro
