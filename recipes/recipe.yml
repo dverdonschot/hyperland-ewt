@@ -53,7 +53,6 @@ modules:
         # Audio system (PipeWire)
         - pavucontrol             # GUI audio control
         - pamixer                 # CLI volume control
-        - alsa-plugins-pulseaudio # Additional ALSA plugins
 
         # Multimedia codecs and hardware acceleration
         - mesa-va-drivers         # VA-API drivers for video acceleration (already installed but ensure it stays)
