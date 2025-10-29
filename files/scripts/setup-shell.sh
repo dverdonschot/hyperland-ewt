@@ -17,8 +17,11 @@ mkdir -p /etc/skel/.config/oh-my-posh
 # Download the custom oh-my-posh theme
 curl -s https://raw.githubusercontent.com/dverdonschot/nixos-systems-configuration/main/config/posh-dverdonschot.omp.json -o /etc/skel/.config/oh-my-posh/theme.json
 
-# Add oh-my-posh initialization to bashrc template
+# Add oh-my-posh initialization and npm PATH to bashrc template
 cat >> /etc/skel/.bashrc << 'EOF'
+
+# NPM global packages path
+export PATH="$HOME/.npm-global/bin:$PATH"
 
 # Oh My Posh initialization
 if command -v oh-my-posh >/dev/null 2>&1; then

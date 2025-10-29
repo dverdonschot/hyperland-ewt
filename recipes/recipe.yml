@@ -55,7 +55,14 @@ modules:
         - pamixer                 # CLI volume control
         - alsa-plugins-pulseaudio # Additional ALSA plugins
 
-        # Bluetooth audio support (optional devices)
+        # Multimedia codecs and hardware acceleration
+        - mesa-va-drivers         # VA-API drivers for video acceleration (already installed but ensure it stays)
+        - mesa-vdpau-drivers      # VDPAU drivers for video acceleration
+        - gstreamer1-vaapi        # GStreamer VA-API plugin for hardware video decoding
+        - libvdpau-va-gl          # VDPAU driver with VA-GL backend
+        - vdpauinfo               # VDPAU info utility
+
+        # Bluetooth audio support
         - libfreeaptx             # Free aptX implementation
         - bluez-tools             # Bluetooth utilities
 

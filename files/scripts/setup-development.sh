@@ -13,6 +13,20 @@ echo "Setting up development tools..."
 
 echo "Installing Claude Code CLI..."
 
+# Configure npm global directory for new users
+mkdir -p /etc/skel/.npm-global
+
+# Set npm prefix in system-wide npmrc for new users
+mkdir -p /etc/skel
+cat >> /etc/skel/.npmrc << 'EOF'
+prefix=${HOME}/.npm-global
+EOF
+
+# Configure npm for current installation (image build time)
+mkdir -p ~/.npm-global
+npm config set prefix ~/.npm-global
+export PATH=~/.npm-global/bin:$PATH
+
 # Install Claude Code globally via npm
 npm install -g @anthropic-ai/claude-code
 
