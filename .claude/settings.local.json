@@ -6,7 +6,9 @@
       "Bash(mkdir:*)",
       "Bash(chmod:*)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "Bash(systemctl status:*)"
+      "Bash(systemctl status:*)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "mcp__memory__create_entities"
     ],
     "deny": [],
     "ask": [],
